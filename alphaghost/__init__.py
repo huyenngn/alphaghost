@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright Huyen Nguyen
+# SPDX-License-Identifier: Apache-2.0
+
 """The app package."""
 
 from importlib import metadata

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright DB InfraGO AG
+# SPDX-FileCopyrightText: Copyright Huyen Nguyen
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -101,16 +101,3 @@ html_context = {
     "dependencies": install_requirements,
     "py_req": python_requirement,
 }
-
-
-# -- Skip __new__ methods ----------------------------------------------------
-# This skips all __new__ methods. They only appear for NamedTuple
-# classes, and they don't show any useful information that's not
-# documented on the members already anyways.
-def skip_dunder_new(app, what, name, obj, skip, options) -> bool:
-    del app, obj, options
-    return skip or (what == "class" and name == "__new__")
-
-
-def setup(app):
-    app.connect("autodoc-skip-member", skip_dunder_new)

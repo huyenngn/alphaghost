@@ -18,11 +18,6 @@ Use [uv](https://docs.astral.sh/uv/) to set up a local development environment.
 git clone https://github.com/huyenngn/alphaghost.git
 cd alphaghost
 uv sync
-
-# You may need to explicitly activate the project venv
-# to make code completion and tools available:
-source .venv/bin/activate.sh  # for Linux / Mac
-.venv\Scripts\activate  # for Windows
 ```
 
 You can use `uv run <command>` to avoid having to manually activate the project

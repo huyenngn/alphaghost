@@ -25,7 +25,7 @@ keywords = [
 ]
 classifiers = [
     "Development Status :: 1 - Planning",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
@@ -146,8 +146,6 @@ extend-ignore = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
-ignore-decorators = ["typing.overload"]
-
 
 [tool.setuptools]
 platforms = ["any"]
@@ -160,7 +158,6 @@ zip-safe = false
 include = ["alphaghost", "alphaghost.*"]
 
 [tool.setuptools_scm]
-# This section must exist for setuptools_scm to work
 local_scheme = "no-local-version"
 
 [tool.uv]

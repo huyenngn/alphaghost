@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright Huyen Nguyen
+# SPDX-License-Identifier: Apache-2.0
+
 """Module for playing Phantom Go against various bots."""
 
 import collections

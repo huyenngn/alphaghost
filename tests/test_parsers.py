@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright Huyen Nguyen
+# SPDX-License-Identifier: Apache-2.0
+
 import numpy as np
 import pyspiel
 import pytest

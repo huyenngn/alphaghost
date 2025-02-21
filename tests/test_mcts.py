@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright Huyen Nguyen
+# SPDX-License-Identifier: Apache-2.0
+
 import numpy as np
 import pytest
 from conftest import STATE_B_12_W_2_10
@@ -39,9 +42,9 @@ def test_mcts_bot_infer_hidden_stones(game, bot):
     state = game.deserialize_state(STATE_B_12_W_2_10)
     num_total = parsers.get_stones_count(state)
     num_visible = list(map(len, parsers.get_visible_actions(state)))
+
     new_state = parsers.construct_state(state)
     new_state = bot._infer_hidden_stones(new_state, num_total)
-
     new_num_total = parsers.get_stones_count(new_state)
     new_num_visible = list(map(len, parsers.get_visible_actions(new_state)))
 

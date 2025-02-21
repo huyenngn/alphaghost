@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright Huyen Nguyen
+# SPDX-License-Identifier: Apache-2.0
+
 """Parsers for game states.
 
 Methods for extracting additional information from

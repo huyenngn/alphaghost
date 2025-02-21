@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright Huyen Nguyen
+# SPDX-License-Identifier: Apache-2.0
+
 """An AlphaZero style model with a policy and value head."""
 
 from __future__ import annotations
