@@ -24,6 +24,23 @@ def bot(game) -> ag_mcts.MCTSBot:
     )
 
 
+def test_mcts_bot_infer_hidden_stones(game, bot):
+    state = game.deserialize_state(STATE_B_12_W_2_10)
+    num_total = parsers.get_stones_count(state)
+    num_visible = list(map(len, parsers.get_visible_actions(state)))
+    player = state.current_player()
+
+    new_state = parsers.construct_state(state)
+    new_state = bot._infer_hidden_stones(new_state, num_total)
+    new_num_total = parsers.get_stones_count(new_state)
+    new_num_visible = list(map(len, parsers.get_visible_actions(new_state)))
+    new_player = new_state.current_player()
+
+    assert np.array_equal(new_num_total, num_total)
+    assert np.array_equal(new_num_visible, num_visible)
+    assert new_player == player
+
+
 def test_mcts_bot_step(game, bot):
     state = game.deserialize_state(STATE_B_12_W_2_10)
     action = bot.step(state)
@@ -36,18 +53,3 @@ def test_mcts_bot_step_with_policy(game, bot):
     assert action in state.legal_actions()
     assert isinstance(policy, list)
     assert all(isinstance(p, tuple) and len(p) == 2 for p in policy)
-
-
-def test_mcts_bot_infer_hidden_stones(game, bot):
-    state = game.deserialize_state(STATE_B_12_W_2_10)
-    num_total = parsers.get_stones_count(state)
-    num_visible = list(map(len, parsers.get_visible_actions(state)))
-
-    new_state = parsers.construct_state(state)
-    new_state = bot._infer_hidden_stones(new_state, num_total)
-    new_num_total = parsers.get_stones_count(new_state)
-    new_num_visible = list(map(len, parsers.get_visible_actions(new_state)))
-
-    assert new_state is not None
-    assert np.array_equal(new_num_total, num_total)
-    assert np.array_equal(new_num_visible, num_visible)

@@ -7,6 +7,7 @@ Methods for extracting additional information from
 :class:`pyspiel.State` objects beyond the core python API.
 """
 
+import itertools
 import re
 
 import drawsvg as draw
@@ -49,14 +50,13 @@ def get_board(
     observation_str = state.observation_string(player_id)
     lines = re.findall(r"\d\s([+OX]+)", observation_str)
     size = get_board_size(state)
-    board = np.full((size * size), -1, dtype=np.int8)
+    board = np.full((size, size), -1, dtype=np.int8)
     for i, line in enumerate(lines):
         for j, c in enumerate(line):
-            index = i * size + j
             if c == "O":
-                board[index] = 1
+                board[i, j] = 1
             elif c == "X":
-                board[index] = 0
+                board[i, j] = 0
     return board
 
 
@@ -64,32 +64,23 @@ def get_visible_actions(
     state: pyspiel.State, player_id: int | None = None
 ) -> list[np.ndarray]:
     """Return the visible board position's indices."""
-    size = get_board_size(state)
-    board = np.flipud(
-        get_board(state, player_id).reshape((size, size))
-    ).flatten()
+    board = np.flipud(get_board(state, player_id)).flatten()
     black_mask = board == 0
     white_mask = board == 1
-    black_indices = np.argwhere(black_mask).flatten()
-    white_indices = np.argwhere(white_mask).flatten()
+    black_actions = np.argwhere(black_mask).flatten()
+    white_actions = np.argwhere(white_mask).flatten()
 
-    return [black_indices, white_indices]
+    return [black_actions, white_actions]
 
 
 def _alternate_arrays(
     arr1: np.ndarray, arr2: np.ndarray, default: int
 ) -> list[int]:
-    max_length = max(len(arr1), len(arr2))
-
-    arr1 = np.pad(arr1, (0, max_length - len(arr1)), constant_values=default)
-    arr2 = np.pad(arr2, (0, max_length - len(arr2)), constant_values=default)
-
-    result = []
-    for a, b in zip(arr1, arr2, strict=False):
-        result.append(a)
-        result.append(b)
-
-    return result
+    return [
+        x
+        for pair in itertools.zip_longest(arr1, arr2, fillvalue=default)
+        for x in pair
+    ]
 
 
 def construct_state(state: pyspiel.State) -> pyspiel.State:
@@ -149,11 +140,10 @@ def render_board(
             legend.append(number)
             legend.append(letter)
         for j in range(board_size):
-            index = i * board_size + j
-            if board[index] == -1:
+            if board[i, j] == -1:
                 continue
             col = (j + 1) * GO_SQUARE_SIZE
-            color = "black" if board[index] == 0 else "white"
+            color = "black" if board[i, j] == 0 else "white"
             out.append(draw.Circle(col, row, GO_STONE_RADIUS, fill=color))
     return out
 

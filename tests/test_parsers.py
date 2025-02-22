@@ -4,7 +4,13 @@
 import numpy as np
 import pyspiel
 import pytest
-from conftest import STATE_B_12_W_2_10
+from conftest import STATE_B_12_W_2_10, STATE_B_12_W_2_10_SVG
+
+BLACK_ACTION = 56
+WHITE_ACTION = 64
+
+BLACK_INDEX = (2, 2)
+WHITE_INDEX = (1, 1)
 
 from alphaghost import parsers
 
@@ -46,9 +52,9 @@ def test_get_board(game: pyspiel.Game):
     state = game.deserialize_state(STATE_B_12_W_2_10)
     board = parsers.get_board(state)
 
-    black_stone = board[20]
-    white_stone = board[10]
-    expected_shape = (81,)
+    black_stone = board[BLACK_INDEX]
+    white_stone = board[WHITE_INDEX]
+    expected_shape = (9, 9)
 
     assert board.shape == expected_shape
     assert black_stone == 0
@@ -57,12 +63,12 @@ def test_get_board(game: pyspiel.Game):
 
 def test_get_visible_actions(game: pyspiel.Game):
     state = game.deserialize_state(STATE_B_12_W_2_10)
-    black_indices, white_indices = parsers.get_visible_actions(state)
+    black_actions, white_actions = parsers.get_visible_actions(state)
 
-    assert 56 in black_indices
-    assert 64 in white_indices
-    assert len(black_indices) == 13
-    assert len(white_indices) == 2
+    assert BLACK_ACTION in black_actions
+    assert WHITE_ACTION in white_actions
+    assert len(black_actions) == 13
+    assert len(white_actions) == 2
 
 
 def test_construct_state(game: pyspiel.Game):
@@ -72,11 +78,14 @@ def test_construct_state(game: pyspiel.Game):
     state_svg = parsers.get_board_svg(state)
     new_state_svg = parsers.get_board_svg(new_state)
 
-    # save the svg files for manual inspection
-    with open("state.svg", "w") as f:
-        f.write(state_svg)
-    with open("new_state.svg", "w") as f:
-        f.write(new_state_svg)
-
     assert state_svg == new_state_svg
     assert state.current_player() == new_state.current_player()
+
+
+def test_get_board_svg(game: pyspiel.Game):
+    state = game.deserialize_state(STATE_B_12_W_2_10)
+    svg = parsers.get_board_svg(state)
+
+    expected = STATE_B_12_W_2_10_SVG.read_text()
+
+    assert svg == expected

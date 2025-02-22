@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 import json
-import os
 import pathlib
 import typing as t
 
@@ -93,7 +92,9 @@ class AlphaGhostModel(nn.Module):
         self.optimizer = optim.Adam(
             self.parameters(), lr=learning_rate, weight_decay=weight_decay
         )
-        self._path = path
+        self._path = (
+            path if isinstance(path, pathlib.Path) else pathlib.Path(path)
+        )
 
         self.to(self.device)
 
@@ -139,9 +140,9 @@ class AlphaGhostModel(nn.Module):
         policy = policy / policy.sum(dim=1, keepdim=True)
         return value.detach().cpu().numpy(), policy.detach().cpu().numpy()
 
-    def save_checkpoint(self, step: int) -> str:
+    def save_checkpoint(self, step: int) -> pathlib.Path:
         """Save model checkpoint."""
-        checkpoint_path = os.path.join(self._path, f"model_step_{step}.pth")
+        checkpoint_path = self._path / f"model_step_{step}.pth"
         torch.save(
             {
                 "model_state_dict": self.state_dict(),

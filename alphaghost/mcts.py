@@ -149,19 +149,18 @@ class MCTSBot(pyspiel.Bot):
 
         if state.is_terminal():
             return assumed_state
-        tried: list[list[int]] = [[], []]
-        stones_count = np.zeros(2, dtype=int)
+        tried: list[set[int]] = [{81}, {81}]
+        stones_count = parsers.get_stones_count(assumed_state)
         while not np.array_equal(stones_count, num_total):
             player = assumed_state.current_player()
-            index = stones_count[player]
-            if index < num_total[player]:
+            if stones_count[player] < num_total[player]:
                 backup_state = assumed_state.clone()
                 policy = self.evaluator.prior(assumed_state)
                 policy = [p for p in policy if p[0] not in tried[player]]
                 self._random_state.shuffle(policy)
                 action = max(policy, key=lambda p: p[1])[0]
                 assumed_state.apply_action(action)
-                tried[player].append(action)
+                tried[player].add(action)
                 if (
                     assumed_state.is_terminal()
                     or parsers.get_stones_count(assumed_state)[1 - player]
@@ -170,8 +169,8 @@ class MCTSBot(pyspiel.Bot):
                     # Move terminated game or captured opponent's stones.
                     assumed_state = backup_state
                 else:
-                    stones_count[player] += 1
-                    tried[player] = []
+                    stones_count = parsers.get_stones_count(assumed_state)
+                    tried[player] = {81}
             else:
                 action = self._game.num_distinct_actions() - 1
                 assumed_state.apply_action(action)
