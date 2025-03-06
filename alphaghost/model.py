@@ -142,6 +142,7 @@ class AlphaGhostModel(nn.Module):
 
     def save_checkpoint(self, step: int) -> pathlib.Path:
         """Save model checkpoint."""
+        self._path.mkdir(parents=True, exist_ok=True)
         checkpoint_path = self._path / f"model_step_{step}.pth"
         torch.save(
             {

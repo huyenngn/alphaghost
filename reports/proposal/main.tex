@@ -1,0 +1,191 @@
+\documentclass[12pt,oneside,openright]{article}
+\usepackage{booktabs}
+%Document Variables
+\newcommand{\topic}
+{An AlphaZero-inspired approach to Phantom Go}
+
+\usepackage[utf8]{inputenc}
+\usepackage[scaled]{helvet}
+\renewcommand\familydefault{\sfdefault} 
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr,xcolor}
+\usepackage{xcolor}
+\usepackage{datetime2}
+\usepackage{biblatex}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\hypersetup{
+    colorlinks=false,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+
+\urlstyle{same}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{
+  a4paper,
+  left=30mm,
+  right=30mm,
+  top=4.5cm,
+  headheight=4cm,
+  bottom=4.5cm,
+  footskip=3cm
+}
+\usepackage{easyReview}
+
+\renewcommand*{\bibfont}{\footnotesize}
+\addbibresource{sample.bib}
+\usepackage{xurl}
+\newcommand{\changefont}{%
+    \fontsize{23}{26}\selectfont
+}
+\definecolor{boxcl}{HTML}{666666}
+\definecolor{tubred}{HTML}{c50e1f}
+
+\graphicspath{{assets/}}
+\let\oldheadrule\headrule
+\renewcommand{\headrule}{\color{tubred}\oldheadrule}
+\renewcommand{\headrulewidth}{1.5pt}
+\fancyfoot{}
+
+\setlength{\parindent}{0pt}
+
+\fancyhead[HL]{Bachelor's Thesis Proposal} 
+\fancyhead[HR]{\includegraphics[width=0.15\textwidth]{assets/TUB.png}}
+\fancyfoot[R]{\centering\thepage}
+\pagestyle{fancy}
+\begin{document}
+\date{\today}
+% \begin{titlepage}
+\begin{center}
+  \vspace*{1cm}
+  \Huge
+  \textbf{\topic}
+  \LARGE
+  %Thesis Subtitle
+
+  \vspace{2cm}
+
+  \textbf{Thi Nguyen Ngan Huyen}\\
+  \vspace{0.5cm}
+  \normalsize
+  Matr Nr.: 400883\\
+  E-mail: thinguyen@campus.tu-berlin.de
+  \vspace{2cm}
+
+  \large
+  \begin{center}
+    First Supervisor: Prof. Dr. Dr. h.c. Sahin Albayrak \\
+    Second Supervisor: Dr.- Ing. Stefan Fricke
+  \end{center}        \vspace{0.8cm}
+
+  \Large
+  Technische Universität Berlin\\
+  Fakultät IV – Elektrotechnik und Informatik\\
+  \vspace{1cm}
+  \today
+\end{center}
+\newpage
+% \end{titlepage}
+\pagenumbering{arabic}
+
+\section{Introduction}
+
+Phantom Go is a variant of Go in which part of the information is hidden from the players, making it a game of imperfect information. Unlike standard Go, which has been practically solved by AIs such as AlphaZero, limited research has been conducted on Phantom Go due to its hidden state mechanics. Players only see their own stones and not the opponent’s moves, requiring AI to make decisions based on inference and probabilistic reasoning rather than deterministic board evaluations.
+
+\subsection{Reinforcement Learning in Go}
+
+The state-of-the-art for standard Go is dominated by neural networks (NN) and reinforcement learning (RL), as exemplified by AlphaGo (Silver et al., 2016)\cite{Silver2016} and AlphaZero (Silver et al., 2017)\cite{Silver2017}, which have demonstrated superhuman performance in Go and other board games, outperforming human experts and traditional AI methods.
+
+These systems:
+\begin{itemize}
+  \item Utilize deep neural networks (DNN) to evaluate board states and predict optimal moves.
+  \item Train through supervised learning with targets from human games and/or self-play using reinforcement learning to optimize strategies.
+  \item Combine Monte Carlo Tree Search (MCTS) with neural networks to guide rollouts and improve decision-making.
+\end{itemize}
+
+\subsection{State of research for Phantom Go}
+
+Unlike standard Go, Phantom Go introduces hidden information, requiring AI agents to infer the opponent’s moves and board state.
+
+Existing approaches extend MCTS with a belief model that simulates potential opponent stone placements, such as the one described by Cazenave in 2006\cite{Cazenave2006}.
+It tracks information revealed from illegal move requests and captures, then randomly assigns unknown opponent stones rather than inferring strategic placement. From 10,000 random games, the algorithm plays the move with the best mean score.
+
+While this approach claims to have achieved intermediate-level play, it does not accurately capture the true belief state and likely struggles with long-term strategy and fails to exploit patterns or opponent mistakes effectively.
+
+To address these limitations, this thesis proposes to train a neural network to predict opponent moves and likely board states. By leveraging a NN to guide MCTS rollouts, similar to AlphaZero but adapted for imperfect information, this approach aims to improve strategic decision-making under uncertainty.
+
+\section{Research Question}
+
+This thesis investigates the hypothesis:
+\\
+\\
+\textbf{Does an AlphaZero-inspired approach outperform existing MCTS baselines in Phantom Go?}
+\\
+\\
+To answer this question, the research will include developing an MCTS algorithm that integrates NN predictions to predict likely board states and opponent moves, as well as conducting experiments comparing the proposed approach to existing MCTS-based baselines with random rollouts.
+
+
+\section{Thesis Approach}
+
+
+\subsection{OpenSpiel as base}
+
+Google Deepmind's OpenSpiel framework provides a Phantom Go environment, which will be used for game simulation, as well as a variety of algorithms for reinforcement learning, including MCTS and AlphaZero. None of these algorithms natively support Phantom Go, so they will need to be extended to handle imperfect information.
+
+\subsection{MCTS for Phantom Go}
+
+OpenSpiel implements a generic MCTS algorithm that takes an observation state and returns the best move. This implementation will be extended to handle hidden information by simulating opponent moves and inferring a belief state from the observation state.
+
+\begin{enumerate}
+  \item MCTS for Phantom Go: Extend OpenSpiel's MCTS implementation to handle hidden information and simulate opponent moves.
+        (instead of sending the as is observation state to evaluator, we will infer a belief state from the observation state and send that to the evaluator)
+  \item Neural Network for State Evaluation: Instead of relying on random rollouts, the AI will train a DNN to predict the value of board positions and suggest plausible opponent moves. (returns a float -> is this state good and a list of probabilities of length next legal moves -> most likely next move)
+  \item Self-Play Training: The model will be trained through self-play, using OpenSpiel's AlphaZero implementation, modified to use the new MCTS and neural network.
+\end{enumerate}
+
+
+\subsection{Evaluation}
+
+The evaluation will compare the AlphaZero-inspired approach against the baseline in Phantom Go. The metrics for comparison will include the win rate, the average game length, and the convergence speed.
+
+
+\section{Timeline}
+
+\begin{table}[H]
+  \caption{Timeline}
+  \centering
+  \begin{tabularx}{\textwidth}{X|X|l}
+    \toprule
+    \multicolumn{1}{c}{Phase}     &
+    \multicolumn{1}{c}{Task}      &
+    \multicolumn{1}{c}{Time}                                                                                                        \\
+    \midrule
+    1. Literature Review          & Survey existing Phantom Go AI research, MCTS, AlphaZero and RL papers.                & 2 weeks \\
+    \hline
+    2. Technology Familiarization & Study OpenSpiel and PyTorch documentation                                             & 2 weeks \\
+    \hline
+    3. Implementation MCTS        & Extend OpenSpiel's MCTS bot with handling of imperfect information.                   & 3 weeks \\
+    \hline
+    4. Implementation AlphaZero.  & Implement and train a neural network with AlphaZero using imperfect information MCTS. & 3 weeks \\
+    \hline
+    5. Compare Against Baseline   & Evaluate AlphaZero performance against baseline with random rollouts                  & 3 week  \\
+    \hline
+    6. Analyze Results            & Compare strategy effectiveness, tune hyperparameters.                                 & 3 week  \\
+    \hline
+    7. Thesis Writing             & Document research, methodology, results, and conclusions                              & 4 weeks \\
+    \hline
+  \end{tabularx}
+  \label{tab:timeline}
+\end{table}
+
+
+\section{References}
+\printbibliography[heading=none]
+
+\end{document}

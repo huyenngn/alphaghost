@@ -13,8 +13,11 @@
 # limitations under the License.
 #
 # Modifications made by Huyen Nguyen on February 21 2025:
-# - Added handling for imperfect information games, specifically Phantom Go.
+# - Added the `_infer_hidden_stones` method to approximate the hidden stones
+# - Modified the `_apply_tree_policy` method to use the `_infer_hidden_stones`
+# - Modified the `mcts_search` method to handle the hidden stones.
 # - Modified docstrings to reflect the changes.
+# - Added type annotations.
 
 """Monte-Carlo Tree Search algorithm for Phantom Go.
 
@@ -23,6 +26,7 @@ extended to support imperfect information games, specifically Phantom Go.
 """
 
 import collections.abc as cabc
+import itertools
 import time
 
 import numpy as np
@@ -52,35 +56,35 @@ class MCTSBot(pyspiel.Bot):
 
         Args
         ----
-          game
-            A pyspiel.Game to play.
-          uct_c
-            The exploration constant for UCT.
-          max_simulations
-            How many iterations of MCTS to perform. Each simulation
-            will result in one call to the evaluator. Memory usage should grow
-            linearly with simulations * branching factor. How many nodes in the
-            search tree should be evaluated. This is correlated with memory size and
-            tree depth.
-          evaluator
-            A `Evaluator` object to use to evaluate a leaf node.
-          solve
-            Whether to back up solved states.
-          random_state
-            An optional numpy RandomState to make it deterministic.
-          child_selection_fn
-            A function to select the child in the descent phase.
-            The default is UCT.
-          dirichlet_noise
-            A tuple of (epsilon, alpha) for adding dirichlet noise to
-            the policy at the root. This is from the alpha-zero paper.
-          verbose
-            Whether to print information about the search tree before
-            returning the action. Useful for confirming the search is working
-            sensibly.
-          dont_return_chance_node
-            If true, do not stop expanding at chance nodes.
-            Enabled for AlphaZero.
+            game
+                A pyspiel.Game to play.
+            uct_c
+                The exploration constant for UCT.
+            max_simulations
+                How many iterations of MCTS to perform. Each simulation
+                will result in one call to the evaluator. Memory usage should grow
+                linearly with simulations * branching factor. How many nodes in the
+                search tree should be evaluated. This is correlated with memory size and
+                tree depth.
+            evaluator
+                A `Evaluator` object to use to evaluate a leaf node.
+            solve
+                Whether to back up solved states.
+            random_state
+                An optional numpy RandomState to make it deterministic.
+            child_selection_fn
+                A function to select the child in the descent phase.
+                The default is UCT.
+            dirichlet_noise
+                A tuple of (epsilon, alpha) for adding dirichlet noise to
+                the policy at the root. This is from the alpha-zero paper.
+            verbose
+                Whether to print information about the search tree before
+                returning the action. Useful for confirming the search is working
+                sensibly.
+            dont_return_chance_node
+                If true, do not stop expanding at chance nodes.
+                Enabled for AlphaZero.
         """
         super().__init__()
 
@@ -95,6 +99,7 @@ class MCTSBot(pyspiel.Bot):
         self._random_state = random_state or np.random.RandomState()
         self._child_selection_fn = child_selection_fn
         self.dont_return_chance_node = dont_return_chance_node
+        self._cache: dict[bytes, str] = {}
 
     def restart_at(self, state) -> None:
         pass
@@ -137,18 +142,49 @@ class MCTSBot(pyspiel.Bot):
         """Return bot's action at given state."""
         return self.step_with_policy(state)[1]
 
-    def _infer_hidden_stones(
-        self, state: pyspiel.State, num_total: np.ndarray
-    ) -> pyspiel.State:
+    def _reconstruct_board(
+        self, state: pyspiel.State, strict: bool = False
+    ) -> str:
+        """Construct state string from observation.
+
+        if `strict` is True, guarantees the reconstructed state will have the
+        same current player as the original state.
+        """
+        visible_actions = parsers.get_visible_actions(state)
+        if all(a.size == 0 for a in visible_actions):
+            return state.serialize()
+        default = self._game.num_distinct_actions() - 1
+        actions = [
+            val
+            for pair in itertools.zip_longest(
+                visible_actions[0], visible_actions[1], fillvalue=default
+            )
+            for val in pair
+        ]
+        if actions[-1] == default:
+            actions.pop()
+        opp_actions = visible_actions[1 - state.current_player()].tolist()
+        if len(actions) % 2 != state.current_player() and (
+            len(opp_actions) > 0 or strict
+        ):
+            actions.append(default)
+        actions += opp_actions
+        return "\n".join(map(str, actions)) + "\n"
+
+    def _infer_hidden_stones(self, state: pyspiel.State) -> pyspiel.State:
         """Approximate the hidden stones.
 
         The Phantom Go rules cannot be broken.
         Assumptions are to be made purely based on player's observations.
         """
-        assumed_state = state.clone()
-
         if state.is_terminal():
-            return assumed_state
+            return state.clone()
+        cache_key = np.expand_dims(state.observation_tensor(), 0).tobytes()
+        state_str = self._cache.setdefault(
+            cache_key, self._reconstruct_board(state)
+        )
+        assumed_state = self._game.deserialize_state(state_str)
+        num_total = parsers.get_stones_count(state)
         tried: list[set[int]] = [{81}, {81}]
         stones_count = parsers.get_stones_count(assumed_state)
         while not np.array_equal(stones_count, num_total):
@@ -167,10 +203,12 @@ class MCTSBot(pyspiel.Bot):
                     != stones_count[1 - player]
                 ):
                     # Move terminated game or captured opponent's stones.
-                    assumed_state = backup_state
+                    assumed_state = backup_state.clone()
                 else:
-                    stones_count = parsers.get_stones_count(assumed_state)
+                    # Make visible.
+                    assumed_state.apply_action(action)
                     tried[player] = {81}
+                    stones_count = parsers.get_stones_count(assumed_state)
             else:
                 action = self._game.num_distinct_actions() - 1
                 assumed_state.apply_action(action)
@@ -180,7 +218,6 @@ class MCTSBot(pyspiel.Bot):
         self,
         root: mcts.SearchNode,
         state: pyspiel.State,
-        num_total: np.ndarray,
     ) -> tuple[list[mcts.SearchNode], pyspiel.State]:
         """Apply the UCT policy to play the game until reaching a leaf node.
 
@@ -190,20 +227,20 @@ class MCTSBot(pyspiel.Bot):
 
         Args
         ----
-          root
-            The root node in the search tree.
-          state
-            The state of the game at the root node.
+            root
+                The root node in the search tree.
+            state
+                The state of the game at the root node.
 
         Returns
         -------
-          visit_path
+            visit_path
             A list of nodes descending from the root node to a leaf node.
-          working_state
+            working_state
             The state of the game at the leaf node.
         """
         visit_path = [root]
-        working_state = self._infer_hidden_stones(state, num_total)
+        working_state = self._infer_hidden_stones(state)
         current_node = root
         while (
             not working_state.is_terminal() and current_node.explore_count > 0
@@ -246,12 +283,8 @@ class MCTSBot(pyspiel.Bot):
     def mcts_search(self, state: pyspiel.State) -> mcts.SearchNode:
         """Search with Monte-Carlo Tree Search algorithm."""
         root = mcts.SearchNode(None, state.current_player(), 1)
-        num_total = parsers.get_stones_count(state)
-        state = parsers.construct_state(state)
         for _ in range(self.max_simulations):
-            visit_path, working_state = self._apply_tree_policy(
-                root, state, num_total
-            )
+            visit_path, working_state = self._apply_tree_policy(root, state)
             if working_state.is_terminal():
                 returns = working_state.returns()
                 visit_path[-1].outcome = returns

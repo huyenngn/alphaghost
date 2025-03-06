@@ -16,6 +16,7 @@
 # - Modified the original code to support Phantom Go
 # - Changed `alphazero` function name to `alphaghost`
 # - Modified docstrings to reflect the changes.
+# - Added type annotations.
 
 """A basic AlphaZero implementation.
 
@@ -25,6 +26,7 @@ modified to use :class:`alphaghost.mcts.MCTSBot` and
 :class:`alphaghost.model.AlphaGhostModel` to support imperfect information
 games, specifically Phantom Go.
 """
+from __future__ import annotations
 
 import collections.abc as cabc
 import datetime
@@ -105,55 +107,56 @@ class Buffer:
 
 
 class Config(t.NamedTuple):
+    """Configuration for the AlphaGhOst algorithm."""
+
     board_size: int = 9
-    """The size of the board."""
+    # The size of the board.
     path: str = "checkpoints/"
-    """Where to save checkpoints."""
+    # Where to save checkpoints.
     learning_rate: float = 0.001
-    """How fast to update weights."""
+    # How fast to update weights.
     weight_decay: float = 0.0001
-    """L2 regularization strength."""
+    # L2 regularization strength.
     train_batch_size: int = 256
-    """Number of training samples per update."""
+    # Number of training samples per update.
     replay_buffer_size: int = 10000
-    """How many states to store in the replay buffer."""
+    # How many states to store in the replay buffer.
     replay_buffer_reuse: int = 3
-    """How many times to learn from each state."""
+    # How many times to learn from each state.
     max_steps: int = 0
-    """How many learn steps before exiting."""
+    # How many learn steps before exiting.
     checkpoint_freq: int = 100
-    """Save a checkpoint every N steps."""
+    # Save a checkpoint every N steps.
     actors: int = 2
-    """How many actors to generate training data."""
+    # How many actors to generate training data.
     evaluators: int = 1
-    """How many evaluators to run."""
+    # How many evaluators to run.
     evaluation_window: int = 100
-    """How many games to average results over."""
+    # How many games to average results over.
     eval_levels: int = 7
-    """Play evaluation games vs MCTS+Solver, with
-    max_simulations*10^(n/2) simulations for n in range(eval_levels)."""
+    # Play evaluation games vs MCTS+Solver, with max_simulations*10^(n/2) simulations for n in range(eval_levels).
     uct_c: float = 2.0
-    """Exploring new moves vs. choosing known good moves"""
+    # Exploring new moves vs. choosing known good moves
     max_simulations: int = 100
-    """How many MCTS simulations per move."""
+    # How many MCTS simulations per move.
     policy_alpha: float = 1.0
-    """Dirichlet noise alpha."""
+    # Dirichlet noise alpha.
     policy_epsilon: float = 0.25
-    """What noise epsilon to use."""
+    # What noise epsilon to use.
     temperature: float = 1.0
-    """Encourage random moves early in training."""
+    # Encourage random moves early in training.
     temperature_drop: int = 10
-    """Drop randomness after N steps."""
+    # Drop randomness after N steps.
     nn_width: int = 128
-    """Number of layers in the network."""
+    # Number of layers in the network.
     nn_depth: int = 3
-    """Number of nodes in each layer."""
+    # Number of nodes in each layer.
     observation_shape: t.Any = None
-    """The shape of the observation tensor."""
+    # The shape of the observation tensor.
     output_size: int = 82
-    """The number of possible actions."""
+    # The number of possible actions.
     quiet: bool = True
-    """Don't show the moves as they're played."""
+    # Don't show the moves as they're played.
 
     @classmethod
     def from_json(cls, path: pathlib.Path):
@@ -161,7 +164,7 @@ class Config(t.NamedTuple):
         return cls(**json.loads(path.read_text()))
 
 
-def _init_model_from_config(config: Config):
+def _init_model_from_config(config: Config) -> ag_model.AlphaGhostModel:
     """Initialize the AlphaGhostModel from a configuration."""
     return ag_model.AlphaGhostModel(
         input_shape=config.observation_shape,
@@ -213,7 +216,7 @@ def _init_bot(
     game: pyspiel.Game,
     evaluator_: mcts.Evaluator,
     evaluation: bool,
-):
+) -> ag_mcts.MCTSBot:
     """Initialize a bot."""
     noise = (
         None if evaluation else (config.policy_epsilon, config.policy_alpha)
@@ -238,7 +241,7 @@ def _play_game(
     bots: list[ag_mcts.MCTSBot],
     temperature: float,
     temperature_drop: int,
-):
+) -> Trajectory:
     """Play one game, return the trajectory."""
     trajectory = Trajectory()
     actions: list[str] = []
@@ -288,7 +291,7 @@ def update_checkpoint(
     queue,
     model: ag_model.AlphaGhostModel,
     az_evaluator: eval_lib.AlphaZeroEvaluator,
-):
+) -> bool:
     """Read the queue for a checkpoint to load, or an exit signal."""
     path = None
     while True:  # Get the last message, ignore intermediate ones.
@@ -386,7 +389,7 @@ def learner(
     config: Config,
     actors: list[spawn.Process],
     evaluators: list[spawn.Process],
-    broadcast_fn: cabc.Callable[[str], None],
+    broadcast_fn: cabc.Callable[[t.Any], None],
     logger,
 ):
     """Consume the replay buffer and train the network."""
@@ -427,7 +430,7 @@ def learner(
             if found == 0:
                 time.sleep(0.01)  # 10ms
 
-    def collect_trajectories():
+    def collect_trajectories() -> tuple[int, int]:
         """Collect the trajectories from actors into the replay buffer."""
         num_trajectories = 0
         num_states = 0
@@ -483,7 +486,7 @@ def learner(
         losses = sum(losses, ag_model.Losses(0, 0, 0)) / len(losses)
         logger.print(losses)
         logger.print("Checkpoint saved:", save_path)
-        return save_path, losses
+        return str(save_path), losses
 
     last_time = time.time() - 60
     for step in itertools.count(1):
@@ -575,8 +578,10 @@ def learner(
         broadcast_fn(save_path)
 
 
-def alphaghost(config: Config):
+def alphaghost(config: Config | None = None):
     """Start all the worker processes for a full alphazero setup."""
+    if config is None:
+        config = Config()
     game = pyspiel.load_game("phantom_go", {"board_size": config.board_size})
     config = config._replace(
         observation_shape=game.observation_tensor_shape(),

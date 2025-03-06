@@ -37,8 +37,12 @@ def play_cli(config, black, white, num_games, verbose):
     """Play a game of Phantom Go."""
     from alphaghost import phantom_go
 
+    if config is None:
+        conf = ag.Config()
+    else:
+        conf = ag.Config.from_json(config)
     phantom_go.PhantomGoGame(
-        config=ag.Config.from_json(config),
+        config=conf,
         black=black,
         white=white,
         verbose=verbose,
@@ -53,7 +57,10 @@ def play_cli(config, black, white, num_games, verbose):
 )
 def train_cli(config):
     """Train a model."""
-    ag.alphaghost(config=ag.Config.from_json(config))
+    if config is None:
+        ag.alphaghost()
+    else:
+        ag.alphaghost(config=ag.Config.from_json(config))
 
 
 if __name__ == "__main__":

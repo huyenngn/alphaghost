@@ -7,7 +7,6 @@ Methods for extracting additional information from
 :class:`pyspiel.State` objects beyond the core python API.
 """
 
-import itertools
 import re
 
 import drawsvg as draw
@@ -17,6 +16,7 @@ import pyspiel
 GO_SQUARE_SIZE = 30
 GO_STAR_POINT_RADIUS = 3
 GO_STONE_RADIUS = GO_TEXT_SIZE = GO_SQUARE_SIZE * 0.4
+GO_BOARD_COLOR = "#e08543"
 
 
 def get_stones_count(state: pyspiel.State) -> np.ndarray:
@@ -73,39 +73,6 @@ def get_visible_actions(
     return [black_actions, white_actions]
 
 
-def _alternate_arrays(
-    arr1: np.ndarray, arr2: np.ndarray, default: int
-) -> list[int]:
-    return [
-        x
-        for pair in itertools.zip_longest(arr1, arr2, fillvalue=default)
-        for x in pair
-    ]
-
-
-def construct_state(state: pyspiel.State) -> pyspiel.State:
-    """Construct state from observation."""
-    if state.is_terminal():
-        return state
-    visible_actions = get_visible_actions(state)
-    if all(a.size == 0 for a in visible_actions):
-        return state
-    game = state.get_game()
-    default = game.num_distinct_actions() - 1
-    actions = _alternate_arrays(
-        visible_actions[0], visible_actions[1], default
-    )
-    if len(actions) % 2 != 0:
-        if actions[-1] == default:
-            actions.pop()
-        else:
-            actions.append(default)
-    opp_id = 1 - state.current_player()
-    actions += visible_actions[opp_id].tolist()
-    data = "\n".join(map(str, actions)) + "\n"
-    return game.deserialize_state(data)
-
-
 def render_board(
     state: pyspiel.State, player_id: int | None = None
 ) -> draw.Drawing:
@@ -114,7 +81,7 @@ def render_board(
     board_size = get_board_size(state)
     size = (board_size + 1) * GO_SQUARE_SIZE
     out = draw.Drawing(size, size)
-    out.append(draw.Rectangle(0, 0, size, size, fill="#e08543"))
+    out.append(draw.Rectangle(0, 0, size, size, fill=GO_BOARD_COLOR))
     center = size / 2
     quarter = int(board_size / 4) * GO_SQUARE_SIZE
     star_points = [center, center - quarter, center + quarter]
