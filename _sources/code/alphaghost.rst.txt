@@ -1,0 +1,51 @@
+alphaghost package
+==================
+
+.. automodule:: alphaghost
+   :no-index:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+alphaghost.alphaghost module
+----------------------------
+
+.. automodule:: alphaghost.alphaghost
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+alphaghost.mcts module
+----------------------
+
+.. automodule:: alphaghost.mcts
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+alphaghost.model module
+-----------------------
+
+.. automodule:: alphaghost.model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+alphaghost.parsers module
+-------------------------
+
+.. automodule:: alphaghost.parsers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+alphaghost.phantom\_go module
+-----------------------------
+
+.. automodule:: alphaghost.phantom_go
+   :members:
+   :undoc-members:
+   :show-inheritance:

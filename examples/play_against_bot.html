@@ -1,0 +1,198 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2. Play Phantom Go against an AlphaGhOst bot &mdash; alphaghost  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="alphaghost" href="../code/modules.html" />
+    <link rel="prev" title="1. Train a neural network to play Phantom Go" href="alphaghost.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            alphaghost
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">How tos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="alphaghost.html">1. Train a neural network to play Phantom Go</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Play Phantom Go against an AlphaGhOst bot</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../code/modules.html">alphaghost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">alphaghost</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">2. </span>Play Phantom Go against an AlphaGhOst bot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Play-Phantom-Go-against-an-AlphaGhOst-bot">
+<h1><span class="section-number">2. </span>Play Phantom Go against an AlphaGhOst bot<a class="headerlink" href="#Play-Phantom-Go-against-an-AlphaGhOst-bot" title="Link to this heading"></a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ipywidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">widgets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">alphaghost</span><span class="w"> </span><span class="kn">import</span> <span class="n">phantom_go</span><span class="p">,</span> <span class="n">parsers</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">alphaghost</span><span class="w"> </span><span class="kn">import</span> <span class="n">alphaghost</span> <span class="k">as</span> <span class="n">ag</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+
+<span class="n">BOARD_SIZE</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">BLACK_PLAYER</span> <span class="o">=</span> <span class="s2">&quot;human&quot;</span>
+<span class="n">WHITE_PLAYER</span> <span class="o">=</span> <span class="s2">&quot;mcts&quot;</span>
+<span class="n">CONFIG</span> <span class="o">=</span> <span class="n">ag</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">board_size</span><span class="o">=</span><span class="n">BOARD_SIZE</span><span class="p">,</span> <span class="n">max_simulations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">uct_c</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">MODEL_PATH</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;checkpoints/model_step_-1.pth&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">game</span> <span class="o">=</span> <span class="n">phantom_go</span><span class="o">.</span><span class="n">PhantomGoGame</span><span class="p">(</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
+    <span class="n">black</span><span class="o">=</span><span class="n">BLACK_PLAYER</span><span class="p">,</span>
+    <span class="n">white</span><span class="o">=</span><span class="n">WHITE_PLAYER</span><span class="p">,</span>
+    <span class="n">ag_model</span><span class="o">=</span><span class="n">MODEL_PATH</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">if</span> <span class="n">BLACK_PLAYER</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span><span class="p">:</span>
+    <span class="n">player_id</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">player_id</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">game</span><span class="o">.</span><span class="n">auto_step</span><span class="p">()</span>
+
+<span class="nb">input</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;a1&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Move: &quot;</span><span class="p">)</span>
+<span class="n">button</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Make move&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">&quot;Make move&quot;</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">render_all</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="n">stones_count</span> <span class="o">=</span> <span class="n">parsers</span><span class="o">.</span><span class="n">get_stones_count</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Black: </span><span class="si">{</span><span class="n">stones_count</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, White: </span><span class="si">{</span><span class="n">stones_count</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">parsers</span><span class="o">.</span><span class="n">render_board</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">player_id</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">previous_move_str</span><span class="p">())</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">previous_move_str</span><span class="p">():</span>
+    <span class="n">color_str</span> <span class="o">=</span> <span class="n">phantom_go</span><span class="o">.</span><span class="n">GoColor</span><span class="p">(</span><span class="ow">not</span> <span class="n">game</span><span class="o">.</span><span class="n">current_player</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">parsers</span><span class="o">.</span><span class="n">get_previous_move_info_string</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">player_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">color_str</span><span class="si">}</span><span class="s2">&#39;s </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">_</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+        <span class="n">winner</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">returns</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">game</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">returns</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">phantom_go</span><span class="o">.</span><span class="n">GoColor</span><span class="p">(</span><span class="n">winner</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Game is over. </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s2"> won.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">game</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="n">previous_move_str</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">current_player</span> <span class="o">!=</span> <span class="n">player_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">game</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+        <span class="n">game</span><span class="o">.</span><span class="n">auto_step</span><span class="p">()</span>
+    <span class="n">render_all</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span>
+
+
+<span class="n">render_all</span><span class="p">()</span>
+<span class="n">button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+<span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">output</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">button</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7092654dbd714b93a81333023ab7e1e3", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="alphaghost.html" class="btn btn-neutral float-left" title="1. Train a neural network to play Phantom Go" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../code/modules.html" class="btn btn-neutral float-right" title="alphaghost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Ngan Huyen Thi Nguyen and the AlphaGhOst contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
