@@ -1,0 +1,7 @@
+alphaghost
+==========
+
+.. toctree::
+   :maxdepth: 4
+
+   alphaghost

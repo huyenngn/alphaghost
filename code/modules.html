@@ -1,0 +1,246 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>alphaghost &mdash; alphaghost  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="alphaghost package" href="alphaghost.html" />
+    <link rel="prev" title="2. Play Phantom Go against an AlphaGhOst bot" href="../examples/play_against_bot.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            alphaghost
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">How tos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/alphaghost.html">1. Train a neural network to play Phantom Go</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/play_against_bot.html">2. Play Phantom Go against an AlphaGhOst bot</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">alphaghost</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="alphaghost.html">alphaghost package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">alphaghost</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">alphaghost</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="alphaghost">
+<h1>alphaghost<a class="headerlink" href="#alphaghost" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="alphaghost.html">alphaghost package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="alphaghost.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="alphaghost.html#module-alphaghost.alphazero">alphaghost.alphazero module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Buffer"><code class="docutils literal notranslate"><span class="pre">Buffer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Buffer.__init__"><code class="docutils literal notranslate"><span class="pre">Buffer.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Buffer.append"><code class="docutils literal notranslate"><span class="pre">Buffer.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Buffer.extend"><code class="docutils literal notranslate"><span class="pre">Buffer.extend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Buffer.sample"><code class="docutils literal notranslate"><span class="pre">Buffer.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config"><code class="docutils literal notranslate"><span class="pre">Config</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.actors"><code class="docutils literal notranslate"><span class="pre">Config.actors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.board_size"><code class="docutils literal notranslate"><span class="pre">Config.board_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.checkpoint_freq"><code class="docutils literal notranslate"><span class="pre">Config.checkpoint_freq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.eval_levels"><code class="docutils literal notranslate"><span class="pre">Config.eval_levels</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.evaluation_window"><code class="docutils literal notranslate"><span class="pre">Config.evaluation_window</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.evaluators"><code class="docutils literal notranslate"><span class="pre">Config.evaluators</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.from_json"><code class="docutils literal notranslate"><span class="pre">Config.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.learning_rate"><code class="docutils literal notranslate"><span class="pre">Config.learning_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.max_simulations"><code class="docutils literal notranslate"><span class="pre">Config.max_simulations</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.max_steps"><code class="docutils literal notranslate"><span class="pre">Config.max_steps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.nn_depth"><code class="docutils literal notranslate"><span class="pre">Config.nn_depth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.nn_width"><code class="docutils literal notranslate"><span class="pre">Config.nn_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.observation_shape"><code class="docutils literal notranslate"><span class="pre">Config.observation_shape</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.output_size"><code class="docutils literal notranslate"><span class="pre">Config.output_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.path"><code class="docutils literal notranslate"><span class="pre">Config.path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.policy_alpha"><code class="docutils literal notranslate"><span class="pre">Config.policy_alpha</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.policy_epsilon"><code class="docutils literal notranslate"><span class="pre">Config.policy_epsilon</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.quiet"><code class="docutils literal notranslate"><span class="pre">Config.quiet</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.replay_buffer_reuse"><code class="docutils literal notranslate"><span class="pre">Config.replay_buffer_reuse</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.replay_buffer_size"><code class="docutils literal notranslate"><span class="pre">Config.replay_buffer_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.temperature"><code class="docutils literal notranslate"><span class="pre">Config.temperature</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.temperature_drop"><code class="docutils literal notranslate"><span class="pre">Config.temperature_drop</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.train_batch_size"><code class="docutils literal notranslate"><span class="pre">Config.train_batch_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.uct_c"><code class="docutils literal notranslate"><span class="pre">Config.uct_c</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Config.weight_decay"><code class="docutils literal notranslate"><span class="pre">Config.weight_decay</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Trajectory"><code class="docutils literal notranslate"><span class="pre">Trajectory</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Trajectory.__init__"><code class="docutils literal notranslate"><span class="pre">Trajectory.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.Trajectory.add"><code class="docutils literal notranslate"><span class="pre">Trajectory.add()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.TrajectoryState"><code class="docutils literal notranslate"><span class="pre">TrajectoryState</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.TrajectoryState.__init__"><code class="docutils literal notranslate"><span class="pre">TrajectoryState.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.actor"><code class="docutils literal notranslate"><span class="pre">actor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.alphazero"><code class="docutils literal notranslate"><span class="pre">alphazero()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.evaluator"><code class="docutils literal notranslate"><span class="pre">evaluator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.learner"><code class="docutils literal notranslate"><span class="pre">learner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.update_checkpoint"><code class="docutils literal notranslate"><span class="pre">update_checkpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.alphazero.watcher"><code class="docutils literal notranslate"><span class="pre">watcher()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="alphaghost.html#module-alphaghost.mcts">alphaghost.mcts module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.mcts.MCTSBot"><code class="docutils literal notranslate"><span class="pre">MCTSBot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.mcts.MCTSBot.__init__"><code class="docutils literal notranslate"><span class="pre">MCTSBot.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.mcts.MCTSBot.mcts_search"><code class="docutils literal notranslate"><span class="pre">MCTSBot.mcts_search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.mcts.MCTSBot.restart_at"><code class="docutils literal notranslate"><span class="pre">MCTSBot.restart_at()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.mcts.MCTSBot.step"><code class="docutils literal notranslate"><span class="pre">MCTSBot.step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.mcts.MCTSBot.step_with_policy"><code class="docutils literal notranslate"><span class="pre">MCTSBot.step_with_policy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="alphaghost.html#module-alphaghost.model">alphaghost.model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.model.AlphaGhostModel"><code class="docutils literal notranslate"><span class="pre">AlphaGhostModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.AlphaGhostModel.__init__"><code class="docutils literal notranslate"><span class="pre">AlphaGhostModel.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.AlphaGhostModel.forward"><code class="docutils literal notranslate"><span class="pre">AlphaGhostModel.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.AlphaGhostModel.from_checkpoint"><code class="docutils literal notranslate"><span class="pre">AlphaGhostModel.from_checkpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.AlphaGhostModel.inference"><code class="docutils literal notranslate"><span class="pre">AlphaGhostModel.inference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.AlphaGhostModel.load_checkpoint"><code class="docutils literal notranslate"><span class="pre">AlphaGhostModel.load_checkpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.AlphaGhostModel.save_checkpoint"><code class="docutils literal notranslate"><span class="pre">AlphaGhostModel.save_checkpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.AlphaGhostModel.update"><code class="docutils literal notranslate"><span class="pre">AlphaGhostModel.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.model.Losses"><code class="docutils literal notranslate"><span class="pre">Losses</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.Losses.l2"><code class="docutils literal notranslate"><span class="pre">Losses.l2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.Losses.policy"><code class="docutils literal notranslate"><span class="pre">Losses.policy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.Losses.total"><code class="docutils literal notranslate"><span class="pre">Losses.total</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.Losses.value"><code class="docutils literal notranslate"><span class="pre">Losses.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.model.TrainInput"><code class="docutils literal notranslate"><span class="pre">TrainInput</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.TrainInput.legals_mask"><code class="docutils literal notranslate"><span class="pre">TrainInput.legals_mask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.TrainInput.observation"><code class="docutils literal notranslate"><span class="pre">TrainInput.observation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.TrainInput.policy"><code class="docutils literal notranslate"><span class="pre">TrainInput.policy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.TrainInput.stack"><code class="docutils literal notranslate"><span class="pre">TrainInput.stack()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.model.TrainInput.value"><code class="docutils literal notranslate"><span class="pre">TrainInput.value</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="alphaghost.html#module-alphaghost.parsers">alphaghost.parsers module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.parsers.get_board"><code class="docutils literal notranslate"><span class="pre">get_board()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.parsers.get_board_size"><code class="docutils literal notranslate"><span class="pre">get_board_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.parsers.get_board_svg"><code class="docutils literal notranslate"><span class="pre">get_board_svg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.parsers.get_previous_move_info_string"><code class="docutils literal notranslate"><span class="pre">get_previous_move_info_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.parsers.get_stones_count"><code class="docutils literal notranslate"><span class="pre">get_stones_count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.parsers.get_visible_actions"><code class="docutils literal notranslate"><span class="pre">get_visible_actions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.parsers.render_board"><code class="docutils literal notranslate"><span class="pre">render_board()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="alphaghost.html#module-alphaghost.phantom_go">alphaghost.phantom_go module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.GoColor"><code class="docutils literal notranslate"><span class="pre">GoColor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.GoColor.Black"><code class="docutils literal notranslate"><span class="pre">GoColor.Black</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.GoColor.White"><code class="docutils literal notranslate"><span class="pre">GoColor.White</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.PhantomGoGame"><code class="docutils literal notranslate"><span class="pre">PhantomGoGame</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.PhantomGoGame.__init__"><code class="docutils literal notranslate"><span class="pre">PhantomGoGame.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.PhantomGoGame.auto_play"><code class="docutils literal notranslate"><span class="pre">PhantomGoGame.auto_play()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.PhantomGoGame.auto_step"><code class="docutils literal notranslate"><span class="pre">PhantomGoGame.auto_step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.PhantomGoGame.bot_step"><code class="docutils literal notranslate"><span class="pre">PhantomGoGame.bot_step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.PhantomGoGame.current_player"><code class="docutils literal notranslate"><span class="pre">PhantomGoGame.current_player</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.PhantomGoGame.restart"><code class="docutils literal notranslate"><span class="pre">PhantomGoGame.restart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="alphaghost.html#alphaghost.phantom_go.PhantomGoGame.step"><code class="docutils literal notranslate"><span class="pre">PhantomGoGame.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../examples/play_against_bot.html" class="btn btn-neutral float-left" title="2. Play Phantom Go against an AlphaGhOst bot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="alphaghost.html" class="btn btn-neutral float-right" title="alphaghost package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Ngan Huyen Thi Nguyen and the AlphaGhOst contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
