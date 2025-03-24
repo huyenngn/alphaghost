@@ -6,7 +6,7 @@ import pathlib
 import click
 
 import alphaghost
-from alphaghost import alphaghost as ag
+from alphaghost import alphazero as az
 
 
 @click.group()
@@ -38,9 +38,9 @@ def play_cli(config, black, white, num_games, verbose):
     from alphaghost import phantom_go
 
     if config is None:
-        conf = ag.Config()
+        conf = az.Config()
     else:
-        conf = ag.Config.from_json(config)
+        conf = az.Config.from_json(config)
     phantom_go.PhantomGoGame(
         config=conf,
         black=black,
@@ -58,9 +58,9 @@ def play_cli(config, black, white, num_games, verbose):
 def train_cli(config):
     """Train a model."""
     if config is None:
-        ag.alphaghost()
+        az.alphazero()
     else:
-        ag.alphaghost(config=ag.Config.from_json(config))
+        az.alphazero(config=az.Config.from_json(config))
 
 
 if __name__ == "__main__":

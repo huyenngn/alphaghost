@@ -578,7 +578,7 @@ def learner(
         broadcast_fn(save_path)
 
 
-def alphaghost(config: Config | None = None):
+def alphazero(config: Config | None = None):
     """Start all the worker processes for a full alphazero setup."""
     if config is None:
         config = Config()

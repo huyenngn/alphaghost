@@ -1,6 +1,6 @@
 # AlphaGhOst
 
-![License: MIT](https://img.shields.io/github/license/huyenngn/alphaghost)
+![License: Apache 2.0](https://img.shields.io/github/license/huyenngn/alphaghost)
 ![Docs](https://github.com/huyenngn/alphaghost/actions/workflows/docs.yml/badge.svg)
 ![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)
 
@@ -8,7 +8,11 @@ AlphaZero inspired Phantom Go bot.
 
 ## Quick Start
 
-The [`docs/source/examples`](docs/source/examples) directory contains notebooks that demonstrate how to use the AlphaGhOst API. You can run the notebooks in a Jupyter environment or view it on GitHub.
+The [`docs/source/examples`](docs/source/examples) directory contains notebooks that demonstrate how to use the AlphaGhOst API. Run the notebooks in a Jupyter environment to get started.
+
+## Documentation
+
+Read the [full documentation on Github pages](https://huyenngn.github.io/alphaghost/).
 
 ## Development
 

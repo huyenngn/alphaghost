@@ -13,7 +13,7 @@ from open_spiel.python.algorithms import mcts
 from open_spiel.python.algorithms.alpha_zero import evaluator as az_evaluator
 from open_spiel.python.bots import human, uniform_random
 
-from alphaghost import alphaghost as ag
+from alphaghost import alphazero as az
 
 
 class GoColor(enum.Enum):
@@ -24,7 +24,7 @@ class GoColor(enum.Enum):
 class PhantomGoGame:
     def __init__(
         self,
-        config: ag.Config,
+        config: az.Config,
         black: str = "human",
         white: str = "ag",
         ag_model: pathlib.Path | None = None,
