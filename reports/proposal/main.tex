@@ -11,7 +11,9 @@
 \usepackage{fancyhdr,xcolor}
 \usepackage{xcolor}
 \usepackage{datetime2}
-\usepackage{biblatex}
+\usepackage[
+    sorting=none,
+]{biblatex}
 \usepackage{float}
 \usepackage{hyperref}
 \usepackage{tabularx}
@@ -41,7 +43,7 @@
 \renewcommand*{\bibfont}{\footnotesize}
 \addbibresource{sample.bib}
 \usepackage{xurl}
-\newcommand{\changefont}{%
+\newcommand{\changefont}{
     \fontsize{23}{26}\selectfont
 }
 \definecolor{boxcl}{HTML}{666666}
@@ -95,13 +97,30 @@
 \pagenumbering{arabic}
 
 \section{Introduction}
-
+In recent years, AlphaZero has demonstrated remarkable success in mastering
+complex perfect information games such as Go, Chess, and Shogi through deep
+reinforcement learning and Monte Carlo Tree Search (MCTS).
+However, its application to imperfect information games remains limited
+due to the challenges of partial observability and hidden information.
+This thesis aims to investigate the adaptation of AlphaZero-inspired methods
+to imperfect information games, specifically using Phantom Go as the testbed.
 Phantom Go is a variant of Go, typically played on a 9x9 board,
-in which part of the information is hidden from the players, making it a game of imperfect information. Unlike standard Go, which has been practically solved by artificial intelligence (AI) such as AlphaZero, limited research has been conducted on Phantom Go due to its hidden state mechanics. Players only see their own stones and not the opponent’s moves, requiring AI to make decisions based on inference and probabilistic reasoning rather than deterministic board evaluations.
+in which a player only observes the outcome of their own moves and whether
+an attempted move was valid or invalid.
+This setting introduces uncertainty about the opponent's actions and
+requires inference mechanisms rather than deterministic board evaluations
+to make informed decisions.
 
-\subsection{Reinforcement Learning in Go}
+\section{Related Work}
 
-The state-of-the-art for standard Go AI is dominated by neural networks (NN) and reinforcement learning (RL), as exemplified by AlphaGo (Silver et al., 2016)\cite{Silver2016} and AlphaZero (Silver et al., 2017)\cite{Silver2017}, which have demonstrated superhuman performance in Go and other board games, outperforming human experts and traditional AI methods.
+\subsection{Reinforcement Learning and Go}
+
+The state-of-the-art artificial intelligence (AI) for standard Go is dominated
+by neural networks (NN) and reinforcement learning (RL), as exemplified by
+AlphaGo \cite{Silver2016alphago} and
+AlphaZero \cite{Silver2017alphazero}, which have demonstrated
+superhuman performance in Go and other board games, outperforming human experts
+and traditional AI methods.
 
 These systems:
 \begin{itemize}
@@ -110,18 +129,48 @@ These systems:
     \item Combine Monte Carlo Tree Search (MCTS) with neural networks to guide rollouts and improve decision-making.
 \end{itemize}
 
-\subsection{State of research for Phantom Go}
+\subsection{Handling Imperfect Information}
+Previous efforts to address imperfect information games include methods such as
+Information Set Monte Carlo Tree Search (IS-MCTS) and Belief-State MCTS (BS-MCTS).
+IS-MCTS operates by sampling a single determinization — a fully observable state
+consistent with the player's observations — and conducting standard MCTS as if
+the game were fully observable. While computationally simple, this approach often
+suffers from strategy fusion and non-locality errors \cite{Cowling2012ismcts}.
+BS-MCTS improves on this by maintaining a belief distribution over all possible
+hidden states and using it to guide tree search more coherently. It has shown
+superior performance in games like Phantom Tic-Tac-Toe and
+Phantom Go \cite{Wang2015bsmcts}.
+Other approaches, such as ReBeL, integrate reinforcement
+learning with counterfactual regret minimization (CFR), a technique that helps
+agents evaluate what actions would have been best in hindsight given how a game
+unfolds. While ReBeL has achieved strong results in poker — a domain with
+structured hidden information — its reliance on extensive-form game representations
+makes it difficult to apply directly to spatial board games like Go \cite{Brown2020rebel}.
+While these methods underscore the importance of reasoning under uncertainty,
+there has been limited exploration of AlphaZero-style self-play combined with
+deep search in games like Phantom Go, where the hidden state and opponent modeling
+present unique challenges for training and inference.
 
-Unlike standard Go, Phantom Go introduces hidden information, requiring AI agents to infer the opponent’s moves and board state.
+\subsection{MCTS and Phantom Go}
 
-Existing approaches extend MCTS with a belief model that simulates potential opponent stone placements, such as the one described by Cazenave in 2006\cite{Cazenave2006}.
-It tracks information revealed from illegal move requests and captures, then randomly assigns unknown opponent stones rather than inferring strategic placement. From 10,000 random games, the algorithm plays the move with the best mean score.
+Unlike standard Go, Phantom Go introduces hidden information,
+requiring AI agents to infer the opponent’s moves and board state.
+Existing approaches, like Cazenave's 2006 "A Phantom-Go Program",
+extend MCTS with a belief model that assumes
+the game is in a specific fully observable state and then performs
+simulations to evaluate potential moves. This approach tracks
+information revealed from illegal move requests and captures, then
+randomly assigns unknown opponent stones rather than inferring strategic placement.
+From 10,000 random games, the algorithm plays the move with the best mean score.
+While this approach claims to have achieved intermediate-level play,
+it does not accurately capture the true belief state and likely struggles
+with long-term strategy and fails to exploit patterns or opponent mistakes
+effectively \cite{Cazenave2006phantomGo}.
 
-While this approach claims to have achieved intermediate-level play, it does not accurately capture the true belief state and likely struggles with long-term strategy and fails to exploit patterns or opponent mistakes effectively.
-
-To address these limitations, this thesis proposes to train a neural network to predict opponent moves and likely board states. By leveraging a NN to guide MCTS rollouts, similar to AlphaZero but adapted for imperfect information, this approach aims to improve strategic decision-making under uncertainty.
 
 \section{Research Question}
+
+To address these limitations, this thesis proposes to
 
 This thesis investigates the hypothesis:
 \\
@@ -131,30 +180,81 @@ This thesis investigates the hypothesis:
 \\
 To answer this question, the research will include developing an MCTS algorithm that integrates NN predictions to predict likely board states and opponent moves, as well as conducting experiments comparing the proposed approach to existing MCTS-based baselines with random rollouts.
 
+To address these limitations, this thesis proposes to train a neural network to predict opponent moves and likely board states. By leveraging a NN to guide MCTS rollouts, similar to AlphaZero but adapted for imperfect information, this approach aims to improve strategic decision-making under uncertainty.
+
+The goal of this thesis is to investigate whether augmenting AlphaZero with mechanisms for belief modeling and reasoning over uncertain states can improve decision-making in imperfect information games. In particular, we aim to answer the following research questions:
+\begin{itemize}
+    \item Can an AlphaZero-style agent trained on partial observations outperform pure MCTS agents in Phantom Go?
+    \item How effective is sampling consistent game states (as in Perfect Information Monte Carlo, or PIMC) for adapting MCTS to Phantom Go?
+    \item Does incorporating learned belief help the agent make more informed decisions and generalize better?
+\end{itemize}
+
+
 
 \section{Thesis Approach}
 
 
 \subsection{OpenSpiel and Phantom Go}
 
-Google Deepmind's OpenSpiel framework provides a Phantom Go environment, which will be used for game simulation, as well as a variety of algorithms for reinforcement learning, including AlphaZero and MCTS implementations. None of them have any special handling for imperfect information games and Phantom Go, so they will need to be modified to handle imperfect information.
+Google Deepmind's OpenSpiel framework provides a Phantom Go environment,
+which will be used for game simulation, as well as a variety of algorithms
+for reinforcement learning, including AlphaZero and MCTS implementations.
+None of them have any special handling for imperfect information games and
+Phantom Go, so they will need to be modified to handle imperfect information.
 
 \subsection{MCTS for Phantom Go}
 
-OpenSpiel implements a generic MCTS algorithm that returns the best move for a given observation state. This implementation will be extended to handle hidden information by simulating opponent moves and inferring a belief state from the observation state. For that a NN will be trained, which takes the observation state as input and returns two things: a float indicating how good the state is for the player (value) and a list of probabilities for every legal move indicating the likelihood of it being the next move (policy). To infer the missing opponent stones, the opponent's observation state will be passed through the NN, and the most likely opponent moves will be simulated based on the predicted policy. With this belief state assumed to be true, the MCTS will be run as usual, with the belief state being passed to the evaluator instead of the observation state. The NN will also be used to guide MCTS rollouts, as is done in AlphaZero. I plan to implement the NN using PyTorch.
+OpenSpiel implements a generic MCTS algorithm that returns the best move
+for a given observation state. This implementation will be extended to
+handle hidden information by simulating opponent moves and inferring a
+belief state from the observation state. For that a NN will be trained,
+which takes the observation state as input and returns two things: a float
+indicating how good the state is for the player (value) and a list of
+probabilities for every legal move indicating the likelihood of it being
+the next move (policy). To infer the missing opponent stones, the opponent's
+observation state will be passed through the NN, and the most likely opponent
+moves will be simulated based on the predicted policy. With this belief
+state assumed to be true, the MCTS will be run as usual, with the belief
+state being passed to the evaluator instead of the observation state.
+The NN will also be used to guide MCTS rollouts, as is done in AlphaZero.
+I plan to implement the NN using PyTorch.
 
 \subsection{AlphaZero Self-Play Training}
 
-The model will be trained through self-play. Using OpenSpiel's AlphaZero implementation as a reference, the training loop will be adapted to use the modified MCTS and NN implementations. The training loop will be similar to AlphaZero's, with the self-play, neural network training, and MCTS search steps.
-GPU acceleration can be used to speed up training. Because of the high computational cost of training, the experiments will be run on the TU Berlin HPC cluster. The hyperparameters will be tuned using Optuna, a hyperparameter optimization framework. It is lightweight and has a pruning feature, which automatically stops the unpromising trails in the early stages of training, saving time and resources.
-
+The model will be trained through self-play. Using OpenSpiel's AlphaZero
+implementation as a reference, the training loop will be adapted to use
+the modified MCTS and NN implementations. The training loop will be similar
+to AlphaZero's, with the self-play, neural network training, and MCTS search steps.
+GPU acceleration can be used to speed up training. Because of the high
+computational cost of training, the experiments will be run on the TU Berlin
+HPC cluster.
 
 \subsection{Evaluation and Hyperparameter Tuning}
 
-The evaluation will compare the AlphaZero-inspired approach against the baseline pure MCTS approach in 9x9 Phantom Go. The metrics for comparison will include the win rate, the average game length, convergence speed, performance against different MCTS hyperparameters, and at different game stages. Should the AI perform well, further experiments will be conducted to analyze it's performance in losing positions.
+The hyperparameters will be tuned using Optuna, a hyperparameter
+optimization framework. It is lightweight and has a pruning feature, which
+automatically stops the unpromising trails in the early stages of training,
+saving time and resources.
+The evaluation will compare the AlphaZero-inspired approach against the
+baseline pure MCTS approach in 9x9 Phantom Go. The metrics for comparison
+will include the win rate, the average game length, convergence speed,
+performance against different MCTS hyperparameters, and at different game
+stages. Should the AI perform well, further experiments will be conducted
+to analyze it's performance in losing positions.
+
 \subsection{Expected Results}
-Should the hypothesis be correct, the AlphaZero-inspired approach will outperform the baseline MCTS with random rollouts in Phantom Go. The AI will demonstrate improved strategic decision-making, exploiting patterns and opponent mistakes more effectively, and achieving a higher win rate and faster convergence speed. The neural network will predict opponent moves and board states more accurately, leading to better decision-making under uncertainty.
-Any limitations or challenges encountered during the research will be discussed in the final thesis. The produced AI will be open-sourced under an Apache 2.0 license in accordance with OpenSpiel's license. The code will be hosted on GitHub and documented using Sphinx autodocs to provide a reference for future research and development.
+Should the hypothesis be correct, the AlphaZero-inspired approach will
+outperform the baseline MCTS with random rollouts in Phantom Go. The AI
+will demonstrate improved strategic decision-making, exploiting patterns
+and opponent mistakes more effectively, and achieving a higher win rate
+and faster convergence speed. The neural network will predict opponent
+moves and board states more accurately, leading to better decision-making
+under uncertainty.
+Any limitations or challenges encountered during the research will be
+discussed in the final thesis. The produced AI will be open-sourced under
+an Apache 2.0 license in accordance with OpenSpiel's license. The code
+will be hosted on GitHub and documented using Sphinx autodocs to provide
+a reference for future research and development.
 
 \section{Timeline}
 
@@ -171,15 +271,13 @@ Any limitations or challenges encountered during the research will be discussed 
         \hline
         2. Technology Familiarization & Study OpenSpiel and PyTorch documentation                                             & 2 weeks \\
         \hline
-        3. Implementation MCTS        & Extend OpenSpiel's MCTS bot with handling of imperfect information.                   & 3 weeks \\
+        3. Implementation MCTS        & Extend OpenSpiel's MCTS bot with handling of imperfect information.                   & 4 weeks \\
         \hline
-        4. Implementation AlphaZero.  & Implement and train a neural network with AlphaZero using imperfect information MCTS. & 3 weeks \\
+        4. Implementation AlphaZero.  & Implement and train a neural network with AlphaZero using imperfect information MCTS. & 4 weeks \\
         \hline
-        5. Compare Against Baseline   & Evaluate AlphaZero performance against baseline with random rollouts                  & 3 week  \\
+        5. Compare Against Baseline   & Evaluate AlphaZero performance against baseline with random rollouts                  & 4 week  \\
         \hline
-        6. Analyze Results            & Compare strategy effectiveness, tune hyperparameters.                                 & 3 week  \\
-        \hline
-        7. Thesis Writing             & Document research, methodology, results, and conclusions                              & 4 weeks \\
+        6. Analyze Results            & Compare strategy effectiveness, tune hyperparameters.                                 & 4 week  \\
         \hline
     \end{tabularx}
     \label{tab:timeline}
