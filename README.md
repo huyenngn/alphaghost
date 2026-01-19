@@ -2,6 +2,9 @@
 
 ![License: Apache 2.0](https://img.shields.io/github/license/huyenngn/alphaghost)
 ![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)
+![CI](https://github.com/huyenngn/alphaghost/actions/workflows/ci.yml/badge.svg?branch=master)
+![Smoke](https://github.com/huyenngn/alphaghost/actions/workflows/smoke.yml/badge.svg?branch=master)
+![Demo model downloads](https://img.shields.io/github/downloads/huyenngn/alphaghost/demo-model/total?label=demo%20model%20downloads)
 
 AlphaZero-inspired AI agent for **Phantom Go** (imperfect-information Go), developed as part of a research thesis.
 

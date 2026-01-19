@@ -18,8 +18,8 @@ from belief.samplers.particle import (
     ParticleDeterminizationSampler,
 )
 
-DEMO_MODEL_URL = "https://github.com/huyenngn/alphaghost/releases/latest/download/demo_model.pt"
-DEFAULT_MODEL_PATH = Path("models/demo_model.pt")
+DEMO_MODEL_URL = "https://github.com/huyenngn/alphaghost/releases/download/demo-model/demo_model.pt"
+DEFAULT_DEMO_MODEL_PATH = Path("models/demo_model.pt")
 
 
 logger = logging.getLogger("phantom_go_api")
@@ -59,18 +59,18 @@ class GameStateResponse(pydantic.BaseModel):
     returns: list[float] = []
 
 
-def _ensure_demo_model(path: Path) -> str:
+def ensure_demo_model(path: Path) -> str:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         return str(path)
 
-    logger.info("AZ model not found. Downloading demo model to %s", path)
+    logger.info("AZ model not found at %s. Downloading demo model...", path)
     try:
         urllib.request.urlretrieve(DEMO_MODEL_URL, str(path))
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Failed to download demo model: {e}",
+            detail=f"Failed to download demo model from release 'demo-model': {e}",
         )
     return str(path)
 
@@ -105,6 +105,11 @@ def _build_agent(game: pyspiel.Game, policy: str, ai_id: int):
         return agent, particle
 
     if policy == "azbsmcts":
+        requested_path = Path(
+            os.environ.get("AZ_MODEL_PATH", str(DEFAULT_DEMO_MODEL_PATH))
+        )
+        model_path = ensure_demo_model(requested_path)
+
         agent = AZBSMCTSAgent(
             player_id=ai_id,
             num_actions=num_actions,
@@ -114,9 +119,7 @@ def _build_agent(game: pyspiel.Game, policy: str, ai_id: int):
             S=2,
             seed=3 + ai_id,
             device=os.environ.get("AZ_DEVICE", "cpu"),
-            model_path=_ensure_demo_model(
-                Path(os.environ.get("AZ_MODEL_PATH", str(DEFAULT_MODEL_PATH)))
-            ),
+            model_path=model_path,
         )
         return agent, particle
 
