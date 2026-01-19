@@ -2,7 +2,7 @@
 \usepackage{booktabs}
 %Document Variables
 \newcommand{\topic}
-{Reinforcement Learning outperforms pure Monte Carlo Tree Search approaches in Phantom Go}
+{An AlphaZero-inspired approach to imperfect information games}
 
 \usepackage[utf8]{inputenc}
 \usepackage[scaled]{helvet}
@@ -11,7 +11,9 @@
 \usepackage{fancyhdr,xcolor}
 \usepackage{xcolor}
 \usepackage{datetime2}
-\usepackage{biblatex}
+\usepackage[
+    sorting=none,
+]{biblatex}
 \usepackage{float}
 \usepackage{hyperref}
 \usepackage{tabularx}
@@ -41,7 +43,7 @@
 \renewcommand*{\bibfont}{\footnotesize}
 \addbibresource{sample.bib}
 \usepackage{xurl}
-\newcommand{\changefont}{%
+\newcommand{\changefont}{
     \fontsize{23}{26}\selectfont
 }
 \definecolor{boxcl}{HTML}{666666}
@@ -55,7 +57,7 @@
 
 \setlength{\parindent}{0pt}
 
-\fancyhead[HL]{Bachelor's Thesis Proposal} 
+\fancyhead[HL]{Bachelor's Thesis} 
 \fancyhead[HR]{\includegraphics[width=0.15\textwidth]{assets/TUB.png}}
 \fancyfoot[R]{\centering\thepage}
 \pagestyle{fancy}
@@ -95,89 +97,217 @@
 \pagenumbering{arabic}
 
 \section{Introduction}
+5 - 8 pages
 
-Phantom Go is a variant of Go in which part of the information is hidden from the players, making it a game of imperfect information. Unlike standard Go, which has been practically solved by AIs such as AlphaZero, limited research has been conducted on Phantom Go due to its hidden state mechanics. Players only see their own stones and not the opponent’s moves, requiring AI to make decisions based on inference and probabilistic reasoning rather than deterministic board evaluations.
+Purpose: Define the problem, why it matters, and what you actually do.
 
-\subsection{Reinforcement Learning in Go}
+Contents:
 
-The state-of-the-art for standard Go is dominated by neural networks (NN) and reinforcement learning (RL), as exemplified by AlphaGo (Silver et al., 2016)\cite{Silver2016} and AlphaZero (Silver et al., 2017)\cite{Silver2017}, which have demonstrated superhuman performance in Go and other board games, outperforming human experts and traditional AI methods.
+Imperfect information in games (short, concrete)
 
-These systems:
-\begin{itemize}
-    \item Utilize deep neural networks (DNN) to evaluate board states and predict optimal moves.
-    \item Train through self-play using reinforcement learning to optimize strategies.
-    \item Combine Monte Carlo Tree Search (MCTS) with neural networks to guide rollouts and improve decision-making.
-\end{itemize}
+Why Phantom Go is a good testbed
 
-\subsection{State of research for Phantom Go}
+Why AlphaZero-style methods don’t directly apply
 
-Unlike standard Go, Phantom Go introduces hidden information, requiring AI agents to infer the opponent’s moves and board state.
+Your research question (one paragraph, no fluff)
 
-Existing approaches extend MCTS with a belief model that simulates potential opponent stone placements, such as the one described by Cazenave in 2006\cite{Cazenave2006}.
-It tracks information revealed from illegal move requests and captures, then randomly assigns unknown opponent stones rather than inferring strategic placement. From 10,000 random games, the bot plays the move with the highest win rate.
+Contributions (bullet list, explicit, modest)
 
-While this approach claims to have achieved intermediate-level play, it does not accurately capture the true belief state and likely struggles with long-term strategy and fails to exploit patterns or opponent mistakes effectively.
+Example contributions (realistic):
 
-To address these limitations, this thesis proposes to train a neural network to predict opponent moves and likely board states. By leveraging RL to guide MCTS rollouts, similar to AlphaZero but adapted for imperfect information, this approach aims to improve strategic decision-making under uncertainty.
+Implementation of BS-MCTS for Phantom Go
 
-\section{Research Question}
+Design of an AlphaZero-inspired belief-based agent
 
-This thesis investigates the hypothesis:
-\\
-\\
-\textbf{Does RL-enhanced MCTS outperform pure MCTS in Phantom Go?}
-\\
-\\
-To answer this question, the research will include developing an MCTS bot that integrates NN predictions and conducting experiments comparing RL-enhanced MCTS to pure MCTS-based approaches with random rollouts.
+Empirical comparison under controlled conditions
 
+If you can’t state your contribution in 3 bullets, you don’t understand it yet.
 
-\section{Thesis Approach}
+\section{Background and Related Work}
 
+10-15 pages
 
-\subsection{RL-Enhanced MCTS}
+Purpose: Show you understand the landscape and position your work.
 
-To address the limitations of pure MCTS, this thesis proposes to combine RL with MCTS, following a paradigm similar to AlphaZero but adapted for imperfect information.
+Split this cleanly:
 
-\begin{enumerate}
-    \item Neural Network for State Evaluation: Instead of relying on random rollouts, the AI will train a DNN to predict the value of board positions and suggest plausible opponent moves.
-    \item Self-Play Training: The model will be trained through self-play, using Proximal Policy Optimization (PPO) as an RL method to optimize move selection.
-    \item Integration with MCTS: The learned value function will replace random rollouts in MCTS, making search simulations more efficient and accurate.
-\end{enumerate}
+2.1 Phantom Go and Imperfect Information
 
-Besides a Phantom Go environment, which will be used for game simulation, Google Deepmind's OpenSpiel framework also provides a variety of algorithms for reinforcement learning, including MCTS and PPO, which can be used to train the RL agent. It may be harder to modify for custom inputs, in which case PyTorch or Stable-Baselines3 will be used for more flexibility.
+Rules of Phantom Go
 
-\subsection{Evaluation: Comparing RL-enhanced MCTS vs. pure MCTS-Based Approaches}
+Observation model (illegal moves, captures)
 
-The evaluation will compare the RL-enhanced MCTS approach against a baseline, which is Google's OpenSpiel MCTS bot for Phantom Go. The metrics for comparison will include the win rate against the pure MCTS baseline, the average game length, and the convergence speed.
+Why determinization is flawed (strategy fusion, non-locality)
 
+2.2 Monte Carlo Tree Search Variants
 
-\section{Timeline}
+Vanilla MCTS (brief)
 
-\begin{table}[H]
-    \caption{Timeline}
-    \centering
-    \begin{tabularx}{\textwidth}{X|X|l}
-        \toprule
-        \multicolumn{1}{c}{Phase}     &
-        \multicolumn{1}{c}{Task}      &
-        \multicolumn{1}{c}{Time}                                                                                          \\
-        \midrule
-        1. Literature Review          & Survey existing Phantom Go AI research, MCTS, AlphaZero and RL papers.  & 2 weeks \\
-        \hline
-        2. Technology Familiarization & Study OpenSpiel documentation (optional: PyTorch, Stable-Baselines3)    & 2 weeks \\
-        \hline
-        3. Implementation             & Implement PPO-based training for MCTS agent.                            & 3 weeks \\
-        \hline
-        4. Compare Against Baseline   & Evaluate AI performance against OpenSpiel MCTS bot with random rollouts & 1 week  \\
-        \hline
-        6. Analyze Results            & Compare strategy effectiveness, tune hyperparameters.                   & 2 week  \\
-        \hline
-        7. Thesis Writing             & Document research, methodology, results, and conclusions                & 3 weeks \\
-        \hline
-    \end{tabularx}
-    \label{tab:timeline}
-\end{table}
+IS-MCTS (why it fails)
 
+BS-MCTS (high-level idea, defer algorithmic details)
+
+2.3 AlphaZero
+
+Core loop: self-play → MCTS → NN training
+
+Why it assumes full observability
+
+Known attempts at imperfect information (ReBeL, etc.)
+
+Do not dump equations here. This section is conceptual.
+
+\section{Problem Statement}
+
+5 pages
+
+Purpose: Make the problem mathematically and algorithmically precise.
+
+This is where weak theses collapse. Yours must include:
+
+Game definition (state, action, observation, belief)
+
+What the agent actually observes
+
+What “belief state” means in your implementation
+
+What performance means (win rate, convergence, etc.)
+
+If you skip this, your experiments will look arbitrary.
+
+\section{Belief-State MCTS for Phantom Go}
+
+12-15 pages
+
+Purpose: This is your baseline and your anchor.
+
+4.1 Belief-State Representation
+
+How you represent sampled states
+
+What is stored vs approximated
+
+Memory and computation trade-offs
+
+4.2 Algorithm Description
+
+Walk through Algorithm 1 from the paper in your own words
+
+Sampling
+
+Selection (player vs opponent nodes)
+
+Expansion, simulation, backpropagation
+
+You must explain why opponent guessing/predicting exists, even if you simplify it.
+
+4.3 Implementation Details
+
+OpenSpiel integration
+
+Key hyperparameters
+
+Simplifications vs original paper (be honest)
+
+This section alone can carry a bachelor’s thesis if done well.
+
+\section{AlphaZero-Inspired Method for Phantom Go}
+
+12-15 pages
+
+Purpose: Show how AlphaZero breaks and how you fix it.
+
+5.1 Why Vanilla AlphaZero Fails
+
+Observation mismatch
+
+Invalid state evaluation
+
+Policy/value collapse
+
+5.2 Belief-Based AlphaZero Architecture
+
+Input representation (belief samples, aggregated features, etc.)
+
+Modified MCTS (how it differs from Section 4)
+
+Training targets (policy/value from belief-MCTS)
+
+Be explicit: this is AlphaZero-inspired, not AlphaZero.
+
+5.3 Training Procedure
+
+Self-play setup
+
+Network architecture (keep it simple)
+
+Loss functions
+
+Compute constraints
+
+If you try to be “clever” here, you’ll fail. Simplicity wins.
+
+\section{Experimental Evaluation}
+
+10-12 pages
+
+Purpose: This is where your thesis earns its grade.
+
+6.1 Experimental Setup
+
+Hardware
+
+Board size
+
+Time limits
+
+Number of games
+
+6.2 Baselines
+
+BS-MCTS (from Section 4)
+
+Possibly IS-MCTS (optional)
+
+6.3 Results
+
+Win rate comparisons
+
+Learning curves
+
+Stability vs compute
+
+Sensitivity to hyperparameters
+
+No storytelling. Tables, plots, facts.
+
+\section{Discussion}
+
+5–7 pages
+
+Purpose: Show you can think critically.
+
+Why AlphaZero-style methods help (or don’t)
+
+Where belief modeling breaks
+
+What limits performance (compute, belief noise, training instability)
+
+Comparison to expectations from literature
+
+This is where you admit weaknesses intelligently.
+
+\section{Conclusion and Future Work}
+
+3–5 pages
+
+Purpose: Close the loop.
+
+Answer the research question directly
+
+Summarize what worked and what didn’t
+
+Concrete future work (not vague “more experiments”)
 
 \section{References}
 \printbibliography[heading=none]

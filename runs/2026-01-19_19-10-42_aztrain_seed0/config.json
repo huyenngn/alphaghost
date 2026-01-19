@@ -1,0 +1,15 @@
+{
+  "games": 8,
+  "T": 2,
+  "S": 2,
+  "epochs": 2,
+  "batch": 64,
+  "lr": 0.001,
+  "temp": 1.0,
+  "seed": 0,
+  "out": "models/smoke.pt",
+  "device": "cpu",
+  "run_name": "aztrain",
+  "deterministic_torch": false,
+  "logdir": ""
+}
