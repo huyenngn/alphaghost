@@ -3,7 +3,9 @@ import logging
 import os
 import random
 import re
+import urllib.request
 import uuid
+from pathlib import Path
 
 import pydantic
 import pyspiel
@@ -15,6 +17,10 @@ from belief.samplers.particle import (
     ParticleBeliefSampler,
     ParticleDeterminizationSampler,
 )
+
+DEMO_MODEL_URL = "https://github.com/huyenngn/alphaghost/releases/latest/download/demo_model.pt"
+DEFAULT_MODEL_PATH = Path("models/demo_model.pt")
+
 
 logger = logging.getLogger("phantom_go_api")
 logging.basicConfig(level=logging.INFO)
@@ -51,6 +57,22 @@ class GameStateResponse(pydantic.BaseModel):
     previous_move_infos: list[PreviousMoveInfo] = []
     is_terminal: bool = False
     returns: list[float] = []
+
+
+def _ensure_demo_model(path: Path) -> str:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        return str(path)
+
+    logger.info("AZ model not found. Downloading demo model to %s", path)
+    try:
+        urllib.request.urlretrieve(DEMO_MODEL_URL, str(path))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to download demo model: {e}",
+        )
+    return str(path)
 
 
 def _build_agent(game: pyspiel.Game, policy: str, ai_id: int):
@@ -92,7 +114,9 @@ def _build_agent(game: pyspiel.Game, policy: str, ai_id: int):
             S=2,
             seed=3 + ai_id,
             device=os.environ.get("AZ_DEVICE", "cpu"),
-            model_path=os.environ.get("AZ_MODEL_PATH", "models/model.pt"),
+            model_path=_ensure_demo_model(
+                Path(os.environ.get("AZ_MODEL_PATH", str(DEFAULT_MODEL_PATH)))
+            ),
         )
         return agent, particle
 

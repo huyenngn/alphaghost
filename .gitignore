@@ -73,6 +73,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+*.jsonl
 
 node_modules
 .DS_Store
@@ -86,6 +87,7 @@ coverage
 
 # Editor directories and files
 .vscode/*
+Thumbs.db
 !.vscode/extensions.json
 .idea
 *.suo
@@ -97,3 +99,13 @@ coverage
 *.tsbuildinfo
 
 uv.lock
+
+# Artifacts
+runs/
+plots/
+models/
+
+# Optuna / sqlite
+*.db
+*.sqlite
+*.sqlite3
